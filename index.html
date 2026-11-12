@@ -3,6 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("recruiter-friendly-theme");
+          var theme = saved === "dark" || saved === "light" ? saved : (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
     <meta name="description"
           content="Ajah Wisdom Agaba - full-stack software engineer." />
     <title>Ajah Wisdom Agaba | Software Engineer</title>
@@ -19,7 +28,13 @@
       <nav id="site-nav">
         <a href="#work">Projects</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a>
       </nav>
-      <a class="contact-link" href="#contact">Let's talk <b>↗</b></a>
+      <div class="header-actions">
+        <a class="contact-link" href="#contact">Let's talk <b>↗</b></a>
+        <button class="theme-toggle" type="button" aria-pressed="false" aria-label="Switch to dark mode">
+          <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M21 14.5A8.5 8.5 0 0 1 9.5 3 7 7 0 1 0 21 14.5z" /></svg>
+          <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor" /><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M4.8 4.8l1.6 1.6M17.6 17.6l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.8 19.2l1.6-1.6M17.6 6.4l1.6-1.6" /></g></svg>
+        </button>
+      </div>
       <label class="menu-toggle" for="nav-toggle"><span class="open">Menu</span><span class="close">Close</span></label>
     </header>
     <main id="top">
@@ -276,6 +291,37 @@
             document.getElementById("nav-toggle").checked = false;
           });
         });
+
+        var themeToggle = document.querySelector(".theme-toggle");
+
+        function syncThemeToggle() {
+          var dark = document.documentElement.getAttribute("data-theme") === "dark";
+          themeToggle.setAttribute("aria-pressed", dark ? "true" : "false");
+          themeToggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+        }
+
+        themeToggle.addEventListener("click", function () {
+          var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+          document.documentElement.setAttribute("data-theme", next);
+          try {
+            localStorage.setItem("recruiter-friendly-theme", next);
+          } catch (e) {}
+          syncThemeToggle();
+        });
+
+        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", function (event) {
+          var saved;
+          try {
+            saved = localStorage.getItem("recruiter-friendly-theme");
+          } catch (e) {
+            return;
+          }
+          if (saved === "dark" || saved === "light") return;
+          document.documentElement.setAttribute("data-theme", event.matches ? "dark" : "light");
+          syncThemeToggle();
+        });
+
+        syncThemeToggle();
       </script>
     </body>
   </html>
