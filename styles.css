@@ -71,12 +71,39 @@ header {
 
 nav {
     display: flex;
-    gap: 31px
+    gap: 6px
 }
 
 nav a {
+    position: relative;
+    isolation: isolate;
+    display: inline-flex;
+    align-items: center;
     color: var(--ink);
-    text-decoration: none
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    transform: perspective(420px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .35s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease, background .25s ease
+}
+
+nav a:hover,
+nav a.is-hot {
+    z-index: 1;
+    color: var(--accent);
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--line));
+    background: radial-gradient(72px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 42%, transparent), transparent 72%), color-mix(in srgb, var(--accent) 8%, var(--paper));
+    box-shadow: 0 8px 16px rgba(16, 22, 20, .1);
+    transform: perspective(420px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-3px)
+}
+
+nav a.is-hot {
+    transition: transform .08s linear, border-color .25s ease, box-shadow .25s ease, color .25s ease, background .08s linear
 }
 
 .contact-link {
@@ -156,24 +183,47 @@ nav a {
     gap: 16px 22px
 }
 
-.buttons a:first-child {
+.buttons a {
+    position: relative;
+    isolation: isolate;
     color: var(--on-fill);
     background: var(--fill);
-    padding: 14px 17px;
+    padding: 14px 18px;
+    border: 1px solid transparent;
+    border-radius: 999px;
     text-decoration: none;
     font-size: 12px;
-    font-weight: 700
+    font-weight: 700;
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    transform: perspective(420px) rotateX(var(--rx)) rotateY(var(--ry));
+    transition: transform .35s ease, border-color .25s ease, box-shadow .25s ease, background .25s ease
 }
 
-.buttons a:first-child b {
+.buttons a b {
+    display: inline-block;
     font-size: 17px;
-    margin-left: 13px
+    margin-left: 10px;
+    transition: transform .25s ease
 }
 
-.buttons a:not(:first-child) {
-    color: var(--ink);
-    font-size: 12px;
-    font-weight: 700
+.buttons a:hover,
+.buttons a.is-hot {
+    border-color: color-mix(in srgb, var(--accent) 65%, var(--fill));
+    box-shadow: 0 10px 20px rgba(16, 22, 20, .16);
+    background: radial-gradient(90px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 50%, transparent), transparent 70%), var(--fill);
+    transform: perspective(420px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(-3px)
+}
+
+.buttons a.is-hot {
+    transition: transform .08s linear, border-color .25s ease, box-shadow .25s ease, background .08s linear
+}
+
+.buttons a:hover b,
+.buttons a.is-hot b {
+    transform: translate(2px, -2px)
 }
 
 .profile {
@@ -974,6 +1024,10 @@ html[data-theme="dark"] .theme-toggle .sun {
         display: flex
     }
 
+    header nav a {
+        align-self: flex-start
+    }
+
     .contact {
         padding: 70px 0
     }
@@ -1082,7 +1136,14 @@ html[data-theme="dark"] .theme-toggle .sun {
     .skills span,
     .skills span.is-hot,
     .skills span:hover,
-    .skills span::before {
+    .skills span::before,
+    .buttons a,
+    .buttons a.is-hot,
+    .buttons a:hover,
+    .buttons a b,
+    nav a,
+    nav a.is-hot,
+    nav a:hover {
         transform: none;
         transition: none
     }
