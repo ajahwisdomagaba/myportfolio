@@ -286,6 +286,36 @@
         <span>© 2026 AJAH WISDOM AGABA</span><span>FULL-STACK SOFTWARE ENGINEER</span><a href="Ajah_Wisdom_Agaba.pdf" download="Ajah_Wisdom_Agaba.pdf">RESUME ↓</a><a href="#top">BACK TO TOP ↑</a>
       </footer>
       <script>
+        (function () {
+          var finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+          var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (!finePointer || reduceMotion) return;
+
+          function trackPointer(selector, tiltX, tiltY) {
+            document.querySelectorAll(selector).forEach(function (item) {
+              item.addEventListener("pointermove", function (event) {
+                var rect = item.getBoundingClientRect();
+                var x = event.clientX - rect.left;
+                var y = event.clientY - rect.top;
+                item.classList.add("is-hot");
+                item.style.setProperty("--mx", x + "px");
+                item.style.setProperty("--my", y + "px");
+                item.style.setProperty("--rx", ((y / rect.height) - 0.5) * -tiltX + "deg");
+                item.style.setProperty("--ry", ((x / rect.width) - 0.5) * tiltY + "deg");
+              });
+
+              item.addEventListener("pointerleave", function () {
+                item.classList.remove("is-hot");
+                item.style.setProperty("--rx", "0deg");
+                item.style.setProperty("--ry", "0deg");
+              });
+            });
+          }
+
+          trackPointer(".work .card", 7, 8);
+          trackPointer(".skills span", 5, 6);
+        })();
+
         document.querySelectorAll("#site-nav a").forEach(function (link) {
           link.addEventListener("click", function () {
             document.getElementById("nav-toggle").checked = false;
